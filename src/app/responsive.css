@@ -1,0 +1,24 @@
+/* Responsive styles for the application */
+
+/* Medium screens (768px and up) */
+@media (min-width: 768px) {
+  .nav-desktop {
+    display: flex !important;
+  }
+  
+  /* Footer responsive styles */
+  footer .flex-col {
+    flex-direction: row !important;
+  }
+  
+  footer .mb-4 {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Hero component responsive styles */
+@media (min-width: 640px) {
+  .hero-buttons {
+    flex-direction: row !important;
+  }
+} 
