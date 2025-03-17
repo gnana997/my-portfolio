@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaCodeBranch } from 'react-icons/fa';
 import { BiGitPullRequest, BiGitPullRequest as FaCodePullRequest } from 'react-icons/bi';
 import { FaExclamationTriangle } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface Repository {
   id: number;
@@ -160,10 +161,12 @@ const GitHubContributions = () => {
           >
             <div className="flex items-center mb-4">
               {githubData && githubData.user && githubData.user.avatar_url && (
-                <img 
+                <Image
                   src={githubData.user.avatar_url}
                   alt={`${githubData.user.login}'s avatar`}
-                  className="w-16 h-16 rounded-full mr-4 ring-2 ring-blue-500/50"
+                  width={64}
+                  height={64}
+                  className="rounded-full mr-4 ring-2 ring-blue-500/50"
                 />
               )}
               <div>

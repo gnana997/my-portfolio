@@ -2,7 +2,7 @@
 
 // src/components/Contact.jsx
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaPhone, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { FaX } from 'react-icons/fa6';
 
 const contactInfo = {
