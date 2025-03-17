@@ -19,10 +19,9 @@ const nextConfig = {
       },
     ],
   },
-  // Specify the output directory
-  distDir: '.next',
-  // Ensure Vercel knows where to find the build output
-  output: 'export',
+  // Remove the static export options to allow API routes
+  // distDir: '.next',
+  // output: 'export',
 };
 
 module.exports = nextConfig; 

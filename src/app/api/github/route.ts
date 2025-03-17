@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { Octokit } from 'octokit';
 
+// Add revalidation and dynamic settings
+export const revalidate = 3600; // Revalidate every hour (3600 seconds)
+
 export async function GET() {
   try {
     // Initialize Octokit with the token from environment variables
@@ -33,20 +36,27 @@ export async function GET() {
       per_page: 1
     });
 
-    // Return the data
-    return NextResponse.json({
-      user: {
-        login: userData.login,
-        avatar_url: userData.avatar_url,
-        html_url: userData.html_url,
-        name: userData.name || userData.login,
-        bio: userData.bio || ''
+    // Return the data with cache headers
+    return NextResponse.json(
+      {
+        user: {
+          login: userData.login,
+          avatar_url: userData.avatar_url,
+          html_url: userData.html_url,
+          name: userData.name || userData.login,
+          bio: userData.bio || ''
+        },
+        repositories: repos,
+        pullRequests: pullRequestsData.items || [],
+        openPullRequests: openPullRequestsData.total_count || 0,
+        totalPullRequests: pullRequestsData.total_count || 0
       },
-      repositories: repos,
-      pullRequests: pullRequestsData.items || [],
-      openPullRequests: openPullRequestsData.total_count || 0,
-      totalPullRequests: pullRequestsData.total_count || 0
-    });
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400'
+        }
+      }
+    );
   } catch (error) {
     console.error('Error fetching GitHub data:', error);
     return NextResponse.json(
