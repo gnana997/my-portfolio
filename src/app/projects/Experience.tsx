@@ -1,13 +1,12 @@
+'use client';
+
 // src/components/Experience.jsx
 import { motion } from 'framer-motion';
-import pureLogo from '../assets/pureLogo.svg';
-import velotioLogo from '../assets/velotioLogo.svg';
-import tcsLogo from '../assets/tcsLogo.svg';
 
 const workExperience = [
   {
     company: "PureStorage",
-    logo: pureLogo,
+    logo: "/assets/pureLogo.svg",
     link: "https://www.purestorage.com/",
     position: "Member of Technical Staff - 3",
     duration: "2023 - Present",
@@ -24,7 +23,7 @@ const workExperience = [
   },
   {
     company: "Velotio Technologies",
-    logo: velotioLogo,
+    logo: "/assets/velotioLogo.svg",
     link: "https://www.velotio.com/",
     position: "Senior Software Engineer",
     duration: "2021 - 2023",
@@ -38,7 +37,7 @@ const workExperience = [
   },
   {
     company: "Tata Consultancy Services",
-    logo: tcsLogo,
+    logo: "/assets/tcsLogo.svg",
     link: "https://www.tcs.com/",
     position: "Systems Engineer",
     duration: "2019 - 2021",

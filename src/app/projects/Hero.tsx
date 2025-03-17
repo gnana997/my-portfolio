@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/Hero.jsx
 import { motion } from 'framer-motion';
 

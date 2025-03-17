@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/Projects.jsx
 import { motion } from 'framer-motion';
 import { FaGithub } from 'react-icons/fa';
@@ -35,7 +37,7 @@ const cardVariants = {
 };
 
 const Projects = () => {
-  const createMarkup = (text) => {
+  const createMarkup = (text: string) => {
     return { __html: text };
   };
 

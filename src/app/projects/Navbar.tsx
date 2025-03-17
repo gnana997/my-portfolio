@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/Navbar.jsx
 import { motion } from 'framer-motion';
 

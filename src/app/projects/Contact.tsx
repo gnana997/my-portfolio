@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/Contact.jsx
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaPhone, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
@@ -6,8 +8,8 @@ import { FaX } from 'react-icons/fa6';
 const contactInfo = {
   email: "gnana097@gmail.com",
   phone: "+91-9578627762",
-  twitter: "https://x.com/GnanaVaradaraju", // Replace with your actual Twitter URL
-  linkedin: "https://linkedin.com/in/gnanavaradaraju", // Replace with your actual LinkedIn URL
+  twitter: "https://x.com/GnanaVaradaraju",
+  linkedin: "https://linkedin.com/in/gnanavaradaraju",
   github: "https://github.com/gnana997",
 };
 
