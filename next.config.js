@@ -19,6 +19,10 @@ const nextConfig = {
       },
     ],
   },
+  // Specify the output directory
+  distDir: '.next',
+  // Ensure Vercel knows where to find the build output
+  output: 'export',
 };
 
 module.exports = nextConfig; 
