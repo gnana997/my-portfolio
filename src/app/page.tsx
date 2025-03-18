@@ -5,7 +5,7 @@ import Projects from './projects/Projects';
 import Contact from './projects/Contact';
 import Footer from './projects/Footer';
 import Experience from './projects/Experience';
-import GitHubContributions from './projects/GitHubContributions';
+import GitHub from './projects/GitHubContributions';
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       <Hero />
       <Experience />
       <Projects />
-      <GitHubContributions />
+      <GitHub />
       <Contact />
       <Footer />
     </div>

@@ -66,7 +66,7 @@ const itemVariants = {
   }
 };
 
-const GitHubContributions = () => {
+const GitHub = () => {
   const [githubData, setGithubData] = useState<GitHubData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -340,4 +340,4 @@ const GitHubContributions = () => {
   );
 };
 
-export default GitHubContributions;
+export default GitHub;
