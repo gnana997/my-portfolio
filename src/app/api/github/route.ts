@@ -27,13 +27,20 @@ export async function GET() {
       q: `author:${username} type:pr`,
       sort: 'updated',
       order: 'desc',
-      per_page: 10
+      per_page: 50 // Fetch more to have enough after filtering
     });
 
     // Fetch open pull requests count
     const { data: openPullRequestsData } = await octokit.rest.search.issuesAndPullRequests({
       q: `author:${username} type:pr state:open`,
       per_page: 1
+    });
+
+    // Filter out PRs to user's own repositories
+    const filteredPRs = pullRequestsData.items.filter(pr => {
+      if (!pr.repository_url) return true;
+      const repoUrl = pr.repository_url.replace('https://api.github.com/repos/', '');
+      return !repoUrl.startsWith(`${username}/`);
     });
 
     // Return the data with cache headers
@@ -47,9 +54,9 @@ export async function GET() {
           bio: userData.bio || ''
         },
         repositories: repos,
-        pullRequests: pullRequestsData.items || [],
+        pullRequests: filteredPRs.slice(0, 10), // Send only first 10 filtered PRs
         openPullRequests: openPullRequestsData.total_count || 0,
-        totalPullRequests: pullRequestsData.total_count || 0
+        totalPullRequests: pullRequestsData.total_count || 0 // Keep the total count unchanged
       },
       {
         headers: {
