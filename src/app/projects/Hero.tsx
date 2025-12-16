@@ -1,167 +1,211 @@
 'use client';
 
-// src/components/Hero.jsx
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { FaGithub, FaLinkedin, FaNpm, FaTwitter } from 'react-icons/fa';
 
-const skillCategories = [
-  {
-    title: "Languages & Runtime",
-    skills: [
-      { name: "Go", icon: "go" },
-      { name: "JavaScript", icon: "js" },
-      { name: "TypeScript", icon: "ts" },
-      { name: "Java", icon: "java" },
-      { name: "Python", icon: "python" }
-    ]
-  },
-  {
-    title: "Infrastructure & DevOps",
-    skills: [
-      { name: "Docker", icon: "docker" },
-      { name: "Kubernetes", icon: "kubernetes" },
-      { name: "AWS", icon: "aws" },
-      { name: "GitHub Actions", icon: "githubactions" },
-      { name: "Terraform", icon: "terraform" }
-    ]
-  },
-  {
-    title: "Databases & Messaging",
-    skills: [
-      { name: "Elasticsearch", icon: "elasticsearch" },
-      { name: "Cassandra", icon: "cassandra" },
-      { name: "Kafka", icon: "kafka" },
-      { name: "Redis", icon: "redis" },
-      { name: "MongoDB", icon: "mongodb" }
-    ]
-  },
-  {
-    title: "Frameworks & Tools",
-    skills: [
-      { name: "React", icon: "react" },
-      { name: "TailwindCSS", icon: "tailwindcss" },
-      { name: "Node.js", icon: "nodejs" },
-      { name: "Spring", icon: "spring" },
-      { name: "VSCode", icon: "vscode" },
-    ]
-  }
+const stats = [
+  { value: 6, suffix: '+', label: 'Years Experience' },
+  { value: 5, suffix: '', label: 'NPM Packages' },
+  { value: 2, suffix: '', label: 'VS Code Extensions' },
+  { value: 'CKA', suffix: '', label: 'Certified', isText: true },
 ];
 
-// Animation Variants
-const cardVariants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-  hover: { scale: 1.03, boxShadow: "0px 8px 30px rgba(59, 130, 246, 0.2)" }
-};
+const socialLinks = [
+  { name: 'GitHub', href: 'https://github.com/gnana997', icon: FaGithub },
+  { name: 'LinkedIn', href: 'https://linkedin.com/in/gnanavaradaraju', icon: FaLinkedin },
+  { name: 'NPM', href: 'https://npmjs.com/~gnana997', icon: FaNpm },
+  { name: 'Twitter', href: 'https://x.com/GnanaVaradaraju', icon: FaTwitter },
+];
 
-const iconVariants = {
-  hover: { 
-    scale: 1.15,
-    transition: { duration: 0.2 }
+// Animated counter component
+function AnimatedCounter({ value, suffix, isText }: { value: number | string; suffix: string; isText?: boolean }) {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (!isVisible || isText) return;
+
+    const numValue = typeof value === 'number' ? value : 0;
+    const duration = 800;
+    const steps = 20;
+    const increment = numValue / steps;
+    let current = 0;
+
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= numValue) {
+        setCount(numValue);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+
+    return () => clearInterval(timer);
+  }, [isVisible, value, isText]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 600);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isText) {
+    return <span>{value}</span>;
   }
-};
 
-const Hero = () => {
+  return <span>{count}{suffix}</span>;
+}
+
+export default function Hero() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col items-center justify-center pt-16 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden"
+      className="min-h-screen flex flex-col justify-center px-6 md:px-8 pt-20"
       aria-labelledby="hero-heading"
     >
-      {/* Subtle Background Effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl top-1/4 left-1/4 animate-pulse-slow"></div>
-        <div className="absolute w-96 h-96 bg-purple-500/10 rounded-full blur-3xl bottom-1/4 right-1/4 animate-pulse-slow"></div>
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="text-center z-10 w-full max-w-6xl mx-auto px-4"
-      >
-        <h1
-          id="hero-heading"
-          className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+      <div className="max-w-7xl mx-auto w-full">
+        {/* Role Label */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="font-mono text-sm text-[#707070] mb-4 tracking-wider"
         >
-          Gnana Siva Sai Varadaraju
-        </h1>
-        <p className="text-xl md:text-2xl mb-4 text-gray-300">MTS-3 @ PureStorage</p>
-        <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">
-          Software Engineer specializing in distributed systems and scalable solutions
-        </p>
+          SENIOR SOFTWARE ENGINEER
+        </motion.p>
 
-        {/* Skills Section */}
+        {/* Name */}
+        <motion.h1
+          id="hero-heading"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-5xl md:text-7xl lg:text-8xl font-black leading-none tracking-tighter"
+        >
+          <span className="text-[#EDEDED]">V Gnana</span>
+          <br />
+          <span className="text-outline">Siva Sai</span>
+        </motion.h1>
+
+        {/* Gradient underline */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isLoaded ? { scaleX: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="h-0.5 w-full max-w-md mt-4 origin-left"
+          style={{
+            background: 'linear-gradient(90deg, #0070F3, #2E2E2E)',
+          }}
+        />
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-8 text-xl md:text-2xl text-[#A1A1A1] max-w-2xl leading-relaxed"
+        >
+          Building high-performance distributed systems and AI-powered developer tools at scale.
+        </motion.p>
+
+        {/* CTA Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-          className="max-w-5xl mx-auto mb-5"
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="mt-8 flex flex-wrap gap-4"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {skillCategories.map((category, index) => (
-              <motion.div
-                key={index}
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover="hover"
-                transition={{ delay: index * 0.2 }}
-                className="bg-gray-800/70 backdrop-blur-md rounded-xl p-6 border border-gray-700/50 shadow-lg hover:border-blue-500/50 transition-all duration-300"
-              >
-                <h3 className="text-lg font-semibold mb-6 text-blue-400">{category.title}</h3>
-                <div className="grid grid-cols-5 gap-4 justify-items-center">
-                  {category.skills.map((skill, skillIndex) => (
-                    <motion.div
-                      key={skillIndex}
-                      className="relative group"
-                      whileHover="hover"
-                    >
-                      <motion.img
-                        variants={iconVariants}
-                        src={`https://skillicons.dev/icons?i=${skill.icon}`}
-                        alt={skill.name}
-                        className="w-12 h-12 md:w-14 md:h-14 transition-all duration-300"
-                      />
-                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                        <span className="bg-gray-900/90 text-gray-200 text-sm px-2 py-1 rounded">
-                          {skill.name}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <a
+            href="mailto:gnana097@gmail.com"
+            className="btn-primary inline-flex items-center gap-2"
+          >
+            Get in Touch
+          </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-ghost inline-flex items-center gap-2"
+          >
+            View Resume
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
         </motion.div>
 
-        <motion.a
-          whileHover={{ scale: 1.1, boxShadow: "0px 4px 20px rgba(59, 130, 246, 0.4)" }}
-          whileTap={{ scale: 0.95 }}
-          href="mailto:gnana097@gmail.com"
-          className="mt-6 inline-block bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 mb-6 rounded-full text-white font-semibold shadow-md transition-all duration-300"
-          aria-label="Send email to gnana097@gmail.com"
-        >
-          Get in Touch
-        </motion.a>
-      </motion.div>
-
-      {/* Scroll Indicator */}
-      {/* <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-8 text-gray-400 text-sm"
-      >
-        <span>Scroll to Explore</span>
+        {/* Stats Banner */}
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-          className="w-4 h-4 border-b-2 border-r-2 border-gray-400 transform rotate-45 mx-auto mt-2"
-        ></motion.div>
-      </motion.div> */}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.7 }}
+          className="mt-12 flex flex-wrap gap-x-8 md:gap-x-12 gap-y-6"
+        >
+          {stats.map((stat, i) => (
+            <div
+              key={i}
+              className="border-l border-[#2E2E2E] pl-6"
+            >
+              <div className="text-3xl md:text-4xl font-bold tracking-tight text-[#EDEDED]">
+                <AnimatedCounter value={stat.value} suffix={stat.suffix} isText={stat.isText} />
+              </div>
+              <div className="font-mono text-xs text-[#707070] mt-1 tracking-wider">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Social Links */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isLoaded ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5, delay: 0.9 }}
+          className="mt-12 flex gap-4"
+        >
+          {socialLinks.map((social) => (
+            <a
+              key={social.name}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 text-[#707070] hover:text-[#EDEDED] hover:bg-[#1A1A1A] rounded-lg transition-all"
+              aria-label={social.name}
+            >
+              <social.icon className="w-5 h-5" />
+            </a>
+          ))}
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isLoaded ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5, delay: 1 }}
+          className="mt-16 md:mt-24 flex items-center gap-3"
+        >
+          <motion.svg
+            animate={{ y: [0, 5, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+            className="w-5 h-5 text-[#707070]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </motion.svg>
+          <span className="font-mono text-xs text-[#707070] tracking-wider">
+            SCROLL TO EXPLORE
+          </span>
+        </motion.div>
+      </div>
     </section>
   );
-};
-
-export default Hero;
+}

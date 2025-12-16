@@ -1,129 +1,171 @@
 'use client';
 
-// src/components/Projects.jsx
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub } from 'react-icons/fa';
-import { VscVscode } from 'react-icons/vsc';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
-const projects = [
+interface Project {
+  num: string;
+  title: string;
+  category: string;
+  description: string;
+  impact: string;
+  techStack: string[];
+  githubLink: string;
+  liveLink?: string;
+}
+
+const projects: Project[] = [
   {
-    title: "Ollama Copilot",
-    description: "Ollama Copilot integrates local LLMs from <a href='https://ollama.com/' target='_blank' rel='noopener noreferrer' class='text-blue-400 hover:text-blue-300'>Ollama</a> directly into VS Code, providing AI-powered code completion and an interactive chat experience with your own locally-running models.",
-    githubLink: "https://github.com/gnana997/ollama-copilot",
-    marketPlaceLink: "https://marketplace.visualstudio.com/items?itemName=Gnana997.ollama-dev-companion"
+    num: '01',
+    title: 'Telegram Vault Bot',
+    category: 'DevOps · Go',
+    description: 'Simplifies HashiCorp Vault management via Telegram bot, automating unseal, rekey, and key distribution with real-time updates.',
+    impact: 'Secure key distribution among authorized users',
+    techStack: ['Go', 'Telegram API', 'HashiCorp Vault'],
+    githubLink: 'https://github.com/gnana997/telegram-vault-bot',
   },
   {
-    title: "Telegram Vault Bot",
-    description: "The Vault Engineer Bot simplifies the management of HashiCorp Vault's unseal and rekey operations via a Telegram bot interface. It automates key collection, unseal processes, and rekey procedures, providing real-time status updates and secure key distribution among authorised users.",
-    githubLink: "https://github.com/gnana997/telegram-vault-bot"
+    num: '02',
+    title: 'Decentralized Cache',
+    category: 'Distributed Systems · Go',
+    description: 'Distributed cache system using Raft consensus algorithm ensuring scalability, consistency, and fault tolerance.',
+    impact: 'Production-ready distributed caching',
+    techStack: ['Go', 'Raft Consensus'],
+    githubLink: 'https://github.com/gnana997/decentralized-cache',
   },
   {
-    title: "Load Balancer",
-    description: "A simple, configurable load balancer implemented in Golang, supporting Weighted Round Robin and Round Robin strategies. Features include health checks for service instances and easy configuration via a YAML file.",
-    githubLink: "https://github.com/gnana997/load-balancer-go"
+    num: '03',
+    title: 'Load Balancer',
+    category: 'Infrastructure · Go',
+    description: 'Configurable load balancer supporting Weighted Round Robin and Round Robin strategies with health checks.',
+    impact: 'Easy configuration via YAML file',
+    techStack: ['Go', 'YAML'],
+    githubLink: 'https://github.com/gnana997/load-balancer-go',
   },
   {
-    title: "1 Billion Rows CLI",
-    description: "CLI tool processing 1 billion rows in ~10 seconds to calculate temperature statistics. It provides a simple interface to test the performance using multiple algorithms and data structures.",
-    githubLink: "https://github.com/gnana997/1billion-row-challenge"
-  }
+    num: '04',
+    title: '1 Billion Rows CLI',
+    category: 'Performance · Go',
+    description: 'CLI tool processing 1 billion rows in ~10 seconds to calculate temperature statistics using optimized algorithms.',
+    impact: 'Demonstrates high-performance data processing',
+    techStack: ['Go', 'CLI'],
+    githubLink: 'https://github.com/gnana997/1billion-row-challenge',
+  },
 ];
 
-// Animation Variants
-const cardVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-  hover: { scale: 1.03, boxShadow: "0px 8px 30px rgba(59, 130, 246, 0.15)" },
-};
-
-const Projects = () => {
-  const createMarkup = (text: string) => {
-    return { __html: text };
-  };
+export default function Projects() {
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
 
   return (
-    <section
-      id="projects"
-      className="py-20 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden"
-      aria-labelledby="projects-heading"
-    >
-      {/* Subtle Background Effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl top-1/4 left-1/4 animate-pulse-slow"></div>
-        <div className="absolute w-96 h-96 bg-purple-500/10 rounded-full blur-3xl bottom-1/4 right-1/4 animate-pulse-slow"></div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
-        <motion.h2
-          id="projects-heading"
-          initial={{ opacity: 0, y: -20 }}
+    <section className="py-24 md:py-32 px-6 md:px-8 border-t border-[#1F1F1F]">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.5 }}
+          className="flex items-end justify-between mb-12"
         >
-          Projects
-        </motion.h2>
+          <div>
+            <p className="font-mono text-xs text-[#707070] tracking-wider mb-2">
+              OTHER WORK
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#EDEDED]">
+              Projects
+            </h2>
+          </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8" role="list" aria-label="Project showcase">
+        {/* Project List */}
+        <div className="space-y-1" role="list" aria-label="Project showcase">
           {projects.map((project, index) => (
-            <motion.article
-              key={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              whileHover="hover"
-              transition={{ delay: index * 0.2 }}
-              className="bg-gray-800/70 backdrop-blur-md p-6 rounded-xl border border-gray-700/50 shadow-lg hover:border-blue-500/50 transition-all duration-300 flex flex-col"
+            <motion.div
+              key={project.title}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="group block border-t border-[#1F1F1F] py-6 hover:bg-[#111111] transition-all cursor-pointer px-4 -mx-4"
+              onMouseEnter={() => setHoveredProject(index)}
+              onMouseLeave={() => setHoveredProject(null)}
               role="listitem"
-              aria-labelledby={`project-title-${index}`}
             >
-              <h3
-                id={`project-title-${index}`}
-                className="text-xl font-semibold mb-3 text-blue-400"
-              >
-                {project.title}
-              </h3>
+              <div className="flex flex-col md:flex-row md:items-center gap-4">
+                {/* Number */}
+                <div className="font-mono text-sm text-[#707070] md:w-16">{project.num}</div>
+
+                {/* Title and category */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-xl md:text-2xl font-bold tracking-tight text-[#EDEDED] group-hover:translate-x-2 transition-transform">
+                      {project.title}
+                    </h3>
+                    <svg
+                      className={`w-5 h-5 text-[#707070] transition-all ${
+                        hoveredProject === index ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                  <p className="font-mono text-xs text-[#707070] mt-1 tracking-wider">{project.category}</p>
+                </div>
+
+                {/* Tech stack */}
+                <div className="hidden lg:flex gap-2">
+                  {project.techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 border border-[#1F1F1F] text-xs text-[#707070] rounded"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Expandable description */}
               <div
-                className="text-gray-300 mb-6 flex-grow text-sm md:text-base"
-                dangerouslySetInnerHTML={createMarkup(project.description)}
-                aria-label={`Description of ${project.title}`}
-              />
-              <div className="flex items-center gap-6 mt-auto" aria-label="Project links">
-                {project.githubLink && (
-                  <motion.a
+                className={`overflow-hidden transition-all duration-300 ${
+                  hoveredProject === index ? 'max-h-32 opacity-100 mt-4' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <p className="text-[#A1A1A1] max-w-2xl ml-0 md:ml-16">{project.description}</p>
+                <p className="font-mono text-xs text-[#707070] mt-2 ml-0 md:ml-16">↳ {project.impact}</p>
+                <div className="flex gap-4 mt-3 ml-0 md:ml-16">
+                  <a
                     href={project.githubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-300 hover:text-white bg-gray-900/50 px-4 py-2 rounded-full transition-all duration-200"
-                    whileHover={{ scale: 1.1, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={`${project.title} GitHub repository (opens in new tab)`}
+                    className="inline-flex items-center gap-2 text-xs text-[#0070F3] hover:text-[#0060D0]"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <FaGithub className="text-xl" aria-hidden="true" />
-                    <span className="text-sm md:text-base">GitHub</span>
-                  </motion.a>
-                )}
-                {project.marketPlaceLink && (
-                  <motion.a
-                    href={project.marketPlaceLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-300 hover:text-white bg-gray-900/50 px-4 py-2 rounded-full transition-all duration-200"
-                    whileHover={{ scale: 1.1, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={`${project.title} VS Code Marketplace (opens in new tab)`}
-                  >
-                    <VscVscode className="text-xl" aria-hidden="true" />
-                    <span className="text-sm md:text-base">Marketplace</span>
-                  </motion.a>
-                )}
+                    <FaGithub className="w-4 h-4" />
+                    View on GitHub
+                  </a>
+                  {project.liveLink && (
+                    <a
+                      href={project.liveLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-xs text-[#707070] hover:text-[#EDEDED]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <FaExternalLinkAlt className="w-3 h-3" />
+                      Live Demo
+                    </a>
+                  )}
+                </div>
               </div>
-            </motion.article>
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default Projects;
+}

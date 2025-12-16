@@ -1,182 +1,257 @@
 'use client';
 
-// src/components/Experience.jsx
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
-const workExperience = [
+interface ExperienceCategory {
+  title: string;
+  items: string[];
+}
+
+interface WorkExperience {
+  company: string;
+  logo: string;
+  link: string;
+  position: string;
+  duration: string;
+  location: string;
+  categories?: ExperienceCategory[];
+  description?: string[];
+}
+
+const workExperience: WorkExperience[] = [
   {
-    company: "PureStorage",
-    logo: "/assets/pureLogo.svg",
-    link: "https://www.purestorage.com/",
-    position: "Member of Technical Staff - 3",
-    duration: "2023 - Present",
-    description: [
-      "Developed CI/CD pipelines using GitHub Actions and ArgoCD for seamless Kubernetes deployments, improving deployment efficiency and reducing errors.",
-      "Deployed and maintained Kafka, Elasticsearch, and Cassandra clusters, ensuring optimal performance and high availability for application usage.",
-      "Optimized Elasticsearch setup by configuring S3 repository searches to retain indices older than 30 days for an additional 3 months, enhancing data accessibility and usability for the team.",
-      "Migrated Kubernetes clusters from EKS version 1.24 to 1.31, upgraded EC2 instance types for enhanced performance, significantly reduced the total number of instances, and achieved substantial cost savings, decreasing monthly AWS bills by 25%.",
-      "Implemented Istio service mesh within the Kubernetes cluster for blue-green deployments using feature flags with ArgoCD, enhancing deployment flexibility and minimizing downtime.",
-      "Designed and implemented a high-performance traffic and log monitoring system capable of processing over 100,000 logs per second with minimal latency, improving real-time analytics and system monitoring.",
-      "Created an auto-approval system using Decision Trees, reducing quote approval volume by 77% and decreasing approval time by 42%, significantly enhancing operational efficiency.",
-      "Engineered a solution for Snowflake data processing by replacing complex multi-join queries with efficient in-app operations, achieving a 70–75% reduction in data query latency and substantially improving processing throughput.",
-    ]
+    company: 'Pure Storage',
+    logo: '/assets/pureLogo.svg',
+    link: 'https://www.purestorage.com/',
+    position: 'Member of Technical Staff 3 (MTS-3)',
+    duration: 'Jun 2023 – Present',
+    location: 'Bangalore, India',
+    categories: [
+      {
+        title: 'Observability & AI Platform',
+        items: [
+          'Architected an AI-powered Observability Agent enabling natural language debugging across Elasticsearch logs, Kubernetes infrastructure, and Prometheus metrics using MCP servers',
+          'Built 3 MCP servers (Go + TypeScript): Elasticsearch (7 tools), Kubernetes (9 tools), Prometheus (metrics queries)',
+          'Demonstrated to engineering leadership; reduced MTTR by eliminating tool-switching overhead',
+        ],
+      },
+      {
+        title: 'Infrastructure & Performance',
+        items: [
+          'Designed high-performance traffic monitoring system in Go processing 100,000+ logs/second with minimal latency',
+          'Migrated Kubernetes clusters from EKS 1.24 to 1.31, achieving 25% AWS cost reduction',
+          'Deployed and maintained Kafka, Elasticsearch, and Cassandra clusters ensuring 99.9% availability',
+        ],
+      },
+      {
+        title: 'Automation & Efficiency',
+        items: [
+          'Designed approval system in Go tokenizing user queries into AST trees, achieving 30-50ms latency for 1000+ rules',
+          'Created auto-approval system using Decision Trees reducing quote approval volume by 77%',
+          'Engineered Snowflake data processing solution achieving 70-75% reduction in query latency',
+        ],
+      },
+      {
+        title: 'DevOps & CI/CD',
+        items: [
+          'Built certificate expiration alerting system integrating cert-manager and AWS ACM with PagerDuty',
+          'Developed CI/CD pipelines using GitHub Actions and ArgoCD for Kubernetes deployments',
+          'Implemented Istio service mesh for blue-green deployments using feature flags',
+        ],
+      },
+    ],
   },
   {
-    company: "Velotio Technologies",
-    logo: "/assets/velotioLogo.svg",
-    link: "https://www.velotio.com/",
-    position: "Senior Software Engineer",
-    duration: "2021 - 2023",
+    company: 'Velotio Technologies',
+    logo: '/assets/velotioLogo.svg',
+    link: 'https://www.velotio.com/',
+    position: 'Senior Software Engineer',
+    duration: 'Aug 2021 – May 2023',
+    location: 'Pune, India',
     description: [
-      "Owned end-to-end feature development and deployment for Pure Storage projects, delivering a 20% increase in application performance.",
-      "Built and maintained robust, fault-tolerant AWS cloud infrastructure, achieving consistent high availability and minimizing downtime.",
-      "Collaborated closely with stakeholders to gather requirements, craft detailed functional specifications, and drive seamless application deployments.",
-      "Successfully reverse-engineered, took full ownership of, and modernized two undocumented legacy Spring Boot applications.",
-      "Enhanced legacy applications to meet evolving business requirements and produced comprehensive documentation, significantly streamlining onboarding and future development efforts for the team.",
-    ]
+      'Owned end-to-end feature development delivering 20% increase in application performance',
+      'Built and maintained fault-tolerant AWS cloud infrastructure ensuring high availability',
+      'Reverse-engineered and modernized two undocumented legacy Spring Boot applications',
+    ],
   },
   {
-    company: "Tata Consultancy Services",
-    logo: "/assets/tcsLogo.svg",
-    link: "https://www.tcs.com/",
-    position: "Systems Engineer",
-    duration: "2019 - 2021",
+    company: 'Tata Consultancy Services',
+    logo: '/assets/tcsLogo.svg',
+    link: 'https://www.tcs.com/',
+    position: 'Systems Engineer',
+    duration: 'Jun 2019 – Jul 2021',
+    location: 'Pune, India',
     description: [
-      "Led a strategic initiative for the London Stock Exchange Group, migrating critical infrastructure from on-premises to a Serverless Architecture, resulting in a 15% reduction in operational costs while significantly enhancing system scalability and reliability.",
-      "Architected and implemented a secure, cloud-native solution using AWS Transfer Family, successfully transitioning on-premises SFTP servers to the cloud. This streamlined secure file transfers, boosted operational agility, and improved data accessibility across teams.",
-    ]
+      'Led infrastructure migration from on-premises to Serverless Architecture for London Stock Exchange Group, reducing operational costs by 15%',
+      'Architected cloud-native solution using AWS Transfer Family transitioning SFTP servers to AWS',
+    ],
   },
 ];
 
-// Animation Variants
-const cardVariants = {
-  hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
+export default function Experience() {
+  const [expandedIndex, setExpandedIndex] = useState<number>(0);
 
-const hoverVariants = {
-  hover: { scale: 1.02, boxShadow: "0px 8px 30px rgba(59, 130, 246, 0.15)", transition: { duration: 0.3 } },
-};
-
-const Experience = () => {
   return (
     <section
       id="experience"
-      className="py-20 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden"
+      className="py-24 md:py-32 px-6 md:px-8 border-t border-[#1F1F1F]"
       aria-labelledby="experience-heading"
     >
-      {/* Subtle Background Effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl top-1/4 left-1/4 animate-pulse-slow"></div>
-        <div className="absolute w-96 h-96 bg-purple-500/10 rounded-full blur-3xl bottom-1/4 right-1/4 animate-pulse-slow"></div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 relative z-10">
-        <motion.h2
-          id="experience-heading"
-          initial={{ opacity: 0, y: -20 }}
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl md:text-5xl font-bold text-center mb-20 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.5 }}
+          className="mb-16"
         >
-          Experience
-        </motion.h2>
+          <p className="font-mono text-xs text-[#707070] tracking-wider mb-2">
+            CAREER
+          </p>
+          <h2
+            id="experience-heading"
+            className="text-4xl md:text-5xl font-bold tracking-tight text-[#EDEDED]"
+          >
+            Experience
+          </h2>
+        </motion.div>
 
+        {/* Timeline */}
         <div className="relative" role="list" aria-label="Work experience timeline">
-          <div className="space-y-12">
-            {workExperience.map((experience, index) => (
-              <div
-                key={index}
-                className="relative pl-12"
-                role="listitem"
-                aria-label={`${experience.position} at ${experience.company}, ${experience.duration}`}
-              >
-                {/* Timeline Dot and Line */}
+          {workExperience.map((exp, index) => (
+            <motion.div
+              key={exp.company}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="relative pl-8 md:pl-12 pb-12 last:pb-0"
+              role="listitem"
+            >
+              {/* Timeline Line */}
+              {index < workExperience.length - 1 && (
                 <div
-                  className="absolute left-0 top-0 w-6 h-6 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center border border-blue-400/50 z-10"
+                  className="absolute left-[11px] md:left-[15px] top-6 bottom-0 w-px bg-[#1F1F1F]"
                   aria-hidden="true"
-                >
-                  <div className="w-3 h-3 rounded-full bg-white"></div>
+                />
+              )}
+
+              {/* Timeline Dot */}
+              <div
+                className="absolute left-0 top-1 w-6 h-6 md:w-8 md:h-8 rounded-full bg-[#EDEDED] flex items-center justify-center"
+                aria-hidden="true"
+              >
+                <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-black" />
+              </div>
+
+              {/* Content Card */}
+              <div className="border-l-0 md:border-l-2 border-[#1F1F1F] pl-0 md:pl-8">
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-4">
+                    {exp.logo && (
+                      <div className="w-12 h-12 rounded-lg bg-[#111111] p-2 flex items-center justify-center">
+                        <Image
+                          src={exp.logo}
+                          alt={`${exp.company} logo`}
+                          width={32}
+                          height={32}
+                          className="object-contain max-w-full max-h-full"
+                          style={{ width: 'auto', height: 'auto' }}
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-bold text-[#EDEDED]">
+                        <a
+                          href={exp.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-[#0070F3] transition-colors"
+                        >
+                          {exp.company}
+                        </a>
+                      </h3>
+                      <p className="text-[#A1A1A1]">{exp.position}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-mono text-sm text-[#707070]">{exp.duration}</p>
+                    <p className="text-sm text-[#707070]">{exp.location}</p>
+                  </div>
                 </div>
-                {index < workExperience.length - 1 && (
-                  <div
-                    className="absolute left-2.5 top-6 h-full w-1 bg-gradient-to-b from-blue-600 via-purple-500 to-blue-600"
-                    style={{ height: "calc(100% + 3rem)" }}
-                    aria-hidden="true"
-                  />
+
+                {/* Expandable Categories (for Pure Storage) */}
+                {exp.categories && (
+                  <>
+                    <button
+                      onClick={() => setExpandedIndex(expandedIndex === index ? -1 : index)}
+                      className="flex items-center gap-2 text-sm font-medium text-[#707070] hover:text-[#EDEDED] transition-colors mb-4"
+                      aria-expanded={expandedIndex === index}
+                    >
+                      <svg
+                        className={`w-4 h-4 transition-transform ${
+                          expandedIndex === index ? 'rotate-90' : ''
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                      {expandedIndex === index ? 'Hide details' : 'Show details'}
+                    </button>
+
+                    <AnimatePresence>
+                      {expandedIndex === index && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="grid md:grid-cols-2 gap-4 overflow-hidden"
+                        >
+                          {exp.categories.map((category) => (
+                            <div
+                              key={category.title}
+                              className="p-4 bg-[#111111] rounded-lg border border-[#1F1F1F]"
+                            >
+                              <h4 className="font-semibold text-[#EDEDED] mb-3">{category.title}</h4>
+                              <ul className="space-y-2">
+                                {category.items.map((item, i) => (
+                                  <li key={i} className="text-sm text-[#A1A1A1] flex items-start gap-2">
+                                    <span className="text-[#707070] mt-1">•</span>
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </>
                 )}
 
-                {/* Main Content with Hover Effect */}
-                <motion.div
-                  variants={cardVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  transition={{ delay: index * 0.2 }}
-                >
-                  <motion.article
-                    whileHover={hoverVariants.hover}
-                    className="bg-gray-800/70 backdrop-blur-md rounded-xl p-6 border border-gray-700/50 shadow-lg transition-all duration-300 overflow-hidden"
-                  >
-                    <header className="mb-4 flex items-start justify-between gap-4">
-                      <div className="flex items-center gap-4">
-                        {experience.logo && (
-                          <motion.img
-                            src={experience.logo}
-                            alt={`${experience.company} logo`}
-                            className="w-12 h-12 object-contain rounded-full bg-gray-700/50 p-2"
-                            width="48"
-                            height="48"
-                            whileHover={{ scale: 1.1, rotate: 5 }}
-                            transition={{ duration: 0.3 }}
-                          />
-                        )}
-                        <div>
-                          <h3 className="text-xl md:text-2xl font-bold text-blue-400">
-                            <a
-                              href={experience.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="hover:text-blue-300 transition-colors duration-200"
-                              aria-label={`${experience.company} website (opens in new tab)`}
-                            >
-                              {experience.company}
-                            </a>
-                          </h3>
-                          <h4 className="text-md md:text-lg font-semibold text-gray-200">{experience.position}</h4>
-                        </div>
-                      </div>
-                      <time
-                        dateTime={experience.duration.replace(' - ', '/')}
-                        className="text-gray-400 font-medium text-sm md:text-base whitespace-nowrap bg-gray-900/50 px-3 py-1 rounded-full"
-                      >
-                        {experience.duration}
-                      </time>
-                    </header>
-
-                    <ul
-                      className="list-disc list-inside space-y-3 text-gray-300 text-sm md:text-base"
-                      aria-label={`Responsibilities and achievements at ${experience.company}`}
-                    >
-                      {experience.description.map((item, i) => (
-                        <motion.li
-                          key={i}
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.2 + i * 0.1 }}
-                          className="hover:text-gray-200 transition-colors duration-200"
-                          dangerouslySetInnerHTML={{ __html: item }}
-                        />
-                      ))}
-                    </ul>
-                  </motion.article>
-                </motion.div>
+                {/* Simple Description List (for other companies) */}
+                {exp.description && (
+                  <ul className="space-y-2 mt-4">
+                    {exp.description.map((item, i) => (
+                      <li key={i} className="text-sm text-[#A1A1A1] flex items-start gap-2">
+                        <span className="text-[#707070] mt-1">•</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default Experience;
+}

@@ -1,123 +1,95 @@
 'use client';
 
-// src/components/Contact.jsx
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaPhone, FaLinkedin, FaGithub } from 'react-icons/fa';
-import { FaX } from 'react-icons/fa6';
+import { FaGithub, FaLinkedin, FaNpm, FaTwitter } from 'react-icons/fa';
 
-const contactInfo = {
-  email: "gnana097@gmail.com",
-  phone: "+91-9578627762",
-  twitter: "https://x.com/GnanaVaradaraju",
-  linkedin: "https://linkedin.com/in/gnanavaradaraju",
-  github: "https://github.com/gnana997",
-};
+const socialLinks = [
+  { name: 'GitHub', href: 'https://github.com/gnana997', icon: FaGithub, handle: 'gnana997' },
+  { name: 'LinkedIn', href: 'https://linkedin.com/in/gnanavaradaraju', icon: FaLinkedin, handle: 'gnanavaradaraju' },
+  { name: 'npm', href: 'https://npmjs.com/~gnana997', icon: FaNpm, handle: '~gnana997' },
+  { name: 'Twitter', href: 'https://x.com/GnanaVaradaraju', icon: FaTwitter, handle: '@GnanaVaradaraju' },
+];
 
-const Contact = () => {
+export default function Contact() {
   return (
     <section
       id="contact"
-      className="py-20 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden"
+      className="py-24 md:py-32 px-6 md:px-8 border-t border-[#1F1F1F]"
       aria-labelledby="contact-heading"
     >
-      {/* Subtle Background Effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl top-1/4 left-1/4 animate-pulse-slow"></div>
-        <div className="absolute w-96 h-96 bg-purple-500/10 rounded-full blur-3xl bottom-1/4 right-1/4 animate-pulse-slow"></div>
-      </div>
-
-      <div className="max-w-3xl mx-auto px-4 relative z-10">
-        <motion.h2
-          id="contact-heading"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
-        >
-          Contact Me
-        </motion.h2>
-
+      <div className="max-w-7xl mx-auto text-center">
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="bg-gray-800/70 backdrop-blur-md p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-blue-500/50 transition-all duration-300"
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.5 }}
         >
-          <div className="text-center text-gray-300" aria-label="Contact information">
-            <p className="text-lg mb-6">Feel free to reach out to me through any of these channels!</p>
+          <p className="font-mono text-xs text-[#707070] tracking-wider mb-4">
+            LET&apos;S CONNECT
+          </p>
+          <h2
+            id="contact-heading"
+            className="text-5xl md:text-7xl font-bold tracking-tight text-[#EDEDED] mb-8"
+          >
+            Get in Touch
+          </h2>
+        </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Email */}
-              <motion.a
-                href={`mailto:${contactInfo.email}`}
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-4 bg-gray-900/50 p-4 rounded-full text-gray-300 hover:text-white transition-all duration-200"
-                aria-label={`Send email to ${contactInfo.email}`}
-              >
-                <FaEnvelope className="text-xl text-blue-400" aria-hidden="true" />
-                <span className="text-sm md:text-base">{contactInfo.email}</span>
-              </motion.a>
+        {/* Email Link */}
+        <motion.a
+          href="mailto:gnana097@gmail.com"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="inline-flex items-center gap-3 text-xl md:text-2xl text-[#EDEDED] border-b-2 border-[#EDEDED] pb-1 hover:text-[#0070F3] hover:border-[#0070F3] transition-colors"
+        >
+          gnana097@gmail.com
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </motion.a>
 
-              {/* Phone */}
-              <motion.a
-                href={`tel:${contactInfo.phone}`}
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-4 bg-gray-900/50 p-4 rounded-full text-gray-300 hover:text-white transition-all duration-200"
-                aria-label={`Call ${contactInfo.phone}`}
-              >
-                <FaPhone className="text-xl text-blue-400" aria-hidden="true" />
-                <span className="text-sm md:text-base">{contactInfo.phone}</span>
-              </motion.a>
+        {/* Phone */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mt-4 text-[#707070]"
+        >
+          <a
+            href="tel:+91-9578627762"
+            className="hover:text-[#EDEDED] transition-colors"
+          >
+            +91-9578627762
+          </a>
+        </motion.p>
 
-              {/* Twitter */}
-              <motion.a
-                href={contactInfo.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-4 bg-gray-900/50 p-4 rounded-full text-gray-300 hover:text-white transition-all duration-200"
-                aria-label="Visit my Twitter profile (opens in new tab)"
-              >
-                <FaX className="text-xl text-blue-400" aria-hidden="true" />
-                <span className="text-sm md:text-base">Gnana Varadaraju</span>
-              </motion.a>
-
-              {/* LinkedIn */}
-              <motion.a
-                href={contactInfo.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-4 bg-gray-900/50 p-4 rounded-full text-gray-300 hover:text-white transition-all duration-200"
-                aria-label="Visit my LinkedIn profile (opens in new tab)"
-              >
-                <FaLinkedin className="text-xl text-blue-400" aria-hidden="true" />
-                <span className="text-sm md:text-base">Gnana Varadaraju</span>
-              </motion.a>
-
-              {/* GitHub */}
-              <motion.a
-                href={contactInfo.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(59, 130, 246, 0.2)" }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-4 bg-gray-900/50 p-4 rounded-full text-gray-300 hover:text-white transition-all duration-200 md:col-span-2 md:max-w-md md:mx-auto"
-                aria-label="Visit my GitHub profile (opens in new tab)"
-              >
-                <FaGithub className="text-xl text-blue-400" aria-hidden="true" />
-                <span className="text-sm md:text-base">gnana997</span>
-              </motion.a>
-            </div>
-          </div>
+        {/* Social Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex justify-center gap-8 mt-16"
+        >
+          {socialLinks.map((social) => (
+            <a
+              key={social.name}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center gap-2 text-[#707070] hover:text-[#EDEDED] transition-colors"
+              aria-label={`Visit ${social.name} profile`}
+            >
+              <social.icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              <span className="font-mono text-xs">{social.name}</span>
+            </a>
+          ))}
         </motion.div>
       </div>
     </section>
   );
-};
-
-export default Contact;
+}

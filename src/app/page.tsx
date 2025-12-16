@@ -1,22 +1,28 @@
 // src/app/page.tsx
 import Navbar from './projects/Navbar';
 import Hero from './projects/Hero';
+import FeaturedProjects from './projects/FeaturedProjects';
+import Experience from './projects/Experience';
+import OpenSource from './projects/OpenSource';
 import Projects from './projects/Projects';
+import Skills from './projects/Skills';
+import Certifications from './projects/Certifications';
 import Contact from './projects/Contact';
 import Footer from './projects/Footer';
-import Experience from './projects/Experience';
-import GitHub from './projects/GitHubContributions';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <main className="min-h-screen bg-black text-[#EDEDED]">
       <Navbar />
       <Hero />
+      <FeaturedProjects />
       <Experience />
+      <OpenSource />
       <Projects />
-      <GitHub />
+      <Skills />
+      <Certifications />
       <Contact />
       <Footer />
-    </div>
+    </main>
   );
 }
